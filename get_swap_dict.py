@@ -55,8 +55,8 @@ def main(dataset_folder):
     with open(os.path.join(dataset_folder, 'slt_list.txt')) as f:
         slt_data = json.loads(f.read())
 
-    opt_swap_data = swap_value(opt_data)
-    slt_swap_data = swap_value(slt_data)
+    opt_swap_data = get_swap_dict(opt_data)
+    slt_swap_data = get_swap_dict(slt_data)
 
     with open(os.path.join(dataset_folder, 'opt_swap_dict.txt'), 'w') as f:
         f.write(json.dumps(opt_swap_data))
