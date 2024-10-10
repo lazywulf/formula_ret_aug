@@ -34,9 +34,9 @@ In said folder, the following 8 files should be presented:
 7. opt_judge: Judged formula paths in OPT form (formulas presented in `NTCIR12_MathWiki-qrels_judge.dat`)
 8. slt_judge: Judged formala paths in SLT form (formulas presented in `NTCIR12_MathWiki-qrels_judge.dat`)
 
-NTCIR12_latex_expressions.txt: Latex expressions of the formulas.
-NTCIR12_MathWiki-qrels_judge.dat: Manually evaluated formulas for judging.
-topics.txt: Query formulas.
+- NTCIR12_latex_expressions.txt: Latex expressions of the formulas.
+- NTCIR12_MathWiki-qrels_judge.dat: Manually evaluated formulas for judging.
+- topics.txt: Query formulas.
 
 
 ## Quick Start
