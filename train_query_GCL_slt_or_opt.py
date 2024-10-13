@@ -22,10 +22,13 @@ from EquationData import Equation
 from Augmentor import SwapNodeContent
 
 
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 def make_gin_conv(input_dim, out_dim):
     return GINConv(nn.Sequential(nn.Linear(input_dim, out_dim), nn.ReLU(), nn.Linear(out_dim, out_dim)))
+
 
 class GConv(nn.Module):
     def __init__(self, input_dim, hidden_dim, num_layers):
@@ -75,9 +78,11 @@ class Encoder(nn.Module):
         z2, g2 = self.encoder(x2, edge_index2, batch)
         return z, g, z1, z2, g1, g2
 
+
 def batch_detatch(batch_index, embs, emb_dict):
     tmp_dict = dict(zip(batch_index, embs))
     emb_dict.update(tmp_dict)
+
 
 def train(encoder_model, contrast_model, dataloader, optimizer, global_steps):
     encoder_model.train()
@@ -99,6 +104,7 @@ def train(encoder_model, contrast_model, dataloader, optimizer, global_steps):
         global_steps += 1
     return g1, g2, epoch_loss, global_steps
 
+
 def test(encoder_model, query_dataloader, train_dataloader, result_root, encode, aug_id, batch_size, run_id):
     query_emb = get_embedding(encoder_model, query_dataloader)
     emb_dict = get_embedding(encoder_model, train_dataloader)
@@ -107,7 +113,6 @@ def test(encoder_model, query_dataloader, train_dataloader, result_root, encode,
     
     model_path = os.path.join(result_root, f'{encode}/{aug_id}/{batch_size}/{run_id}')
     torch.save(encoder_model.state_dict(), os.path.join(model_path, 'model'))
-
 
 
 def get_embedding(encoder_model, dataloader):
@@ -131,12 +136,14 @@ def setup_seed(seed):
     torch.backends.cudnn.deterministic = True
     np.random.seed(seed)
     random.seed(seed)
-    
+
+
 def adjust_learning_rate(optimizer, base_lr, end_lr, step, max_steps):
     q = 0.5 * (1 + math.cos(math.pi * step / max_steps))
     lr = base_lr * q + end_lr * (1 - q)
     set_lr(optimizer, lr)
     return lr
+
 
 def set_lr(optimizer, lr):
     for g in optimizer.param_groups:
@@ -147,10 +154,12 @@ def get_swap_dict(file_path):
         swap_dict = json.loads(f.read())
     return swap_dict
 
+
 def get_chr_emb(file_path):
     with open(file_path, 'r') as f:
         char_emb = json.loads(f.read())
     return char_emb
+
 
 def main():
     parser = argparse.ArgumentParser()
