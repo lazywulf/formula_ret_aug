@@ -167,7 +167,7 @@ def main():
     parser.add_argument("--encode", type=str, default='slt')
     parser.add_argument("--pretrained", default=False, action='store_true')
     parser.add_argument("--lr", type=int, default=0.01)
-    parser.add_argument("--epoch", type=int, default=1)
+    parser.add_argument("--epoch", type=int, default=50)
     parser.add_argument("--run_id", type=str, required=True)
     parser.add_argument("--dataset", type=str, default='datasets/encoder/')
     parser.add_argument("--result", type=str, default='Retrieval_result/')
