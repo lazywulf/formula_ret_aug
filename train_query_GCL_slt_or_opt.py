@@ -22,7 +22,7 @@ from EquationData import Equation
 from Augmentor import SwapNodeContent
 
 
-device_name = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def make_gin_conv(input_dim, out_dim):
     return GINConv(nn.Sequential(nn.Linear(input_dim, out_dim), nn.ReLU(), nn.Linear(out_dim, out_dim)))
@@ -60,7 +60,7 @@ class GConv(nn.Module):
         return z, g
 
 
-class Encoder(torch.nn.Module):
+class Encoder(nn.Module):
     def __init__(self, encoder, augmentor):
         super(Encoder, self).__init__()
         self.encoder = encoder
@@ -83,7 +83,7 @@ def train(encoder_model, contrast_model, dataloader, optimizer, global_steps):
     encoder_model.train()
     epoch_loss = 0
     for data in dataloader:
-        data = data.to(device_name)
+        data = data.to(device)
         optimizer.zero_grad()
 
         if data.x is None:
@@ -115,7 +115,7 @@ def get_embedding(encoder_model, dataloader):
     encoder_model.eval()
     with torch.no_grad():    
         for data in dataloader:
-            data = data.to(device_name)
+            data = data.to(device)
             if data.x is None:
                 num_nodes = data.batch.size(0)
                 data.x = torch.ones((num_nodes, 1), dtype=torch.float32, device=data.batch.device)
@@ -158,7 +158,7 @@ def main():
     parser.add_argument("--encode", type=str, default='slt')
     parser.add_argument("--pretrained", default=False, action='store_true')
     parser.add_argument("--lr", type=int, default=0.01)
-    parser.add_argument("--epoch", type=int, default=50)
+    parser.add_argument("--epoch", type=int, default=1)
     parser.add_argument("--run_id", type=str, required=True)
     parser.add_argument("--dataset", type=str, default='datasets/encoder/')
     parser.add_argument("--result", type=str, default='Retrieval_result/')
@@ -189,7 +189,6 @@ def main():
     query_dataloader = DataLoader(query_dataset, batch_size=20) 
     judge_dataset = Equation(root, encode=encode, data_type='judge')
     judge_dataloader = DataLoader(judge_dataset, batch_size=256)
-    device = torch.device(device_name)
 
     swap_dict = get_swap_dict(os.path.join(root, f'{encode}_swap_dict.txt'))
     char_emb = get_chr_emb(os.path.join(root, f'{encode}_char_embedding.txt'))
